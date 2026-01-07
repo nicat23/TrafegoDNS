@@ -7,12 +7,14 @@ const DNSProviderFactory = require('./factory');
 const CloudflareProvider = require('./cloudflare');
 const DigitalOceanProvider = require('./digitalocean');
 const Route53Provider = require('./route53');
+const TechnitiumProvider = require('./technitium');
 
 // Provider types enum for easier reference
 const ProviderTypes = {
   CLOUDFLARE: 'cloudflare',
   DIGITALOCEAN: 'digitalocean',
-  ROUTE53: 'route53'
+  ROUTE53: 'route53',
+  TECHNITIUM: 'technitium'
 };
 
 // Export all providers and utilities
@@ -25,6 +27,7 @@ module.exports = {
   CloudflareProvider,
   DigitalOceanProvider,
   Route53Provider,
+  TechnitiumProvider,
   
   // Constants
   ProviderTypes

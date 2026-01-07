@@ -1,0 +1,35 @@
+# docker-compose.test.yml
+version: '3'
+
+services:
+  technitium:
+    image: technitium/dns-server:latest
+    container_name: technitium-test
+    ports:
+      - "5380:5380"
+      - "53:53/udp"
+    volumes:
+      - ./technitium-data:/etc/dns
+
+  trafegodns:
+    image: trafegodns-technitium:test
+    container_name: trafegodns-test
+    depends_on:
+      - technitium
+    environment:
+      - DNS_PROVIDER=technitium
+      - TECHNITIUM_URL=http://technitium:5380
+      - TECHNITIUM_TOKEN=${TECHNITIUM_TOKEN}
+      - TECHNITIUM_ZONE=test.local
+      - OPERATION_MODE=direct
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config:/config
+
+  test-app:
+    image: nginx:alpine
+    labels:
+      - "dns.hostname=app.test.local"
+      - "dns.type=CNAME"
+      - "dns.content=target.test.local."
