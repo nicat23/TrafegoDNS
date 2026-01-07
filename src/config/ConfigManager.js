@@ -31,6 +31,11 @@ class ConfigManager {
     this.cloudflareToken = EnvironmentLoader.getSecret('CLOUDFLARE_TOKEN');
     this.cloudflareZone = EnvironmentLoader.getString('CLOUDFLARE_ZONE');
     
+    // Technitium settings
+    this.technitiumUrl = EnvironmentLoader.getString('TECHNITIUM_URL');
+    this.technitiumToken = EnvironmentLoader.getSecret('TECHNITIUM_TOKEN');
+    this.technitiumZone = EnvironmentLoader.getString('TECHNITIUM_ZONE');
+
     // Route53 settings
     this.route53AccessKey = EnvironmentLoader.getSecret('ROUTE53_ACCESS_KEY');
     this.route53SecretKey = EnvironmentLoader.getSecret('ROUTE53_SECRET_KEY');
@@ -70,6 +75,9 @@ class ConfigManager {
         break;
       case 'route53':
         this.defaultTTL = EnvironmentLoader.getInt('DNS_DEFAULT_TTL', 60); // Route53 minimum is 60
+        break;
+      case 'technitium':
+        this.defaultTTL = EnvironmentLoader.getInt('DNS_DEFAULT_TTL', 3600); // Technitium standard default
         break;
       default:
         this.defaultTTL = EnvironmentLoader.getInt('DNS_DEFAULT_TTL', 1); // Default fallback
@@ -167,7 +175,19 @@ class ConfigManager {
           throw new Error('CLOUDFLARE_ZONE environment variable is required for Cloudflare provider');
         }
         break;
-        
+      
+      case 'technitium':
+        if (!this.technitiumUrl) {
+          throw new Error('TECHNITIUM_URL is required for Technitium');
+        }
+        if (!this.technitiumToken) {
+          throw new Error('TECHNITIUM_TOKEN is required for Technitium');
+        }
+        if (!this.technitiumZone) {
+          throw new Error('TECHNITIUM_ZONE is required for Technitium');
+        }
+        break;
+
       case 'route53':
         if (!this.route53AccessKey) {
           throw new Error('ROUTE53_ACCESS_KEY environment variable is required for Route53 provider');
@@ -207,6 +227,8 @@ class ConfigManager {
         return this.route53Zone;
       case 'digitalocean':
         return this.digitalOceanDomain;
+      case 'technitium':
+        return this.technitiumZone;
       default:
         return '';
     }

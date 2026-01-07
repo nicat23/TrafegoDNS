@@ -1,6 +1,4 @@
 # docker-compose.test.yml
-version: '3'
-
 services:
   technitium:
     image: technitium/dns-server:latest
@@ -16,6 +14,8 @@ services:
     container_name: trafegodns-test
     depends_on:
       - technitium
+    env_file:
+      - .env.test
     environment:
       - DNS_PROVIDER=technitium
       - TECHNITIUM_URL=http://technitium:5380
